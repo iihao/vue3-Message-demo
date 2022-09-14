@@ -1,0 +1,7 @@
+{
+  "name": "wxServer",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

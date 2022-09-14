@@ -1,0 +1,1 @@
+<view class="content"><view class="text-area"><input class="input-content" placeholder="请输入留言内容" value="{{a}}" bindinput="{{b}}"/></view><button class="ui-btn" bindtap="{{c}}">点击</button></view><view><view wx:for="{{d}}" wx:for-item="item" wx:key="b"><view>{{item.a}}</view></view></view>
