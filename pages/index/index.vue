@@ -24,7 +24,7 @@
       <view class="chat-input-wrapper">
         <view class="input-wrapper">
           <input type="textarea" class="chat-input" trim="all" v-model="inputText" placeholder="请输入留言内容"
-            @focus="userInfo()" />
+            @focus="getToken()" />
         </view>
         <view>
           <button class="chat-send-btn" @click="submitText()">发送</button>
@@ -49,6 +49,7 @@
   const messageList = ref([])
   const likeNum = ref(0)
   const createTime = ref()
+  const token = ref()
   const nickName = ref()
   const avatarUrl = ref()
   const scrollTop = ref()
@@ -103,8 +104,8 @@
       success: res => {
         avatarUrl.value = res.userInfo.avatarUrl
         nickName.value = res.userInfo.nickName
-        uni.setStorageSync('avatarUrl', res.userInfo.avatarUrl)
-        uni.setStorageSync('nickName', res.userInfo.nickName)
+        //uni.setStorageSync('avatarUrl', res.userInfo.avatarUrl)
+        //uni.setStorageSync('nickName', res.userInfo.nickName)
         console.log(res)
       },
       fail: err => {
@@ -113,16 +114,6 @@
     })
   }
 
-  //获取用户信息并存到浏览器及服务器
-  const userInfo = () => {
-    nickName.value = uni.getStorageSync('nickName')
-    avatarUrl.value = uni.getStorageSync('avatarUrl')
-    if (!nickName.value) {
-      getUserInfo()
-    } else {
-      console.log(nickName.value)
-    }
-  }
 
   //滚动页面到最底部
   const scrollButton = async () => {
@@ -137,35 +128,41 @@
       name: 'happy',
       data: {
         api: 'updatelikes',
-        likeNumber: likeNum.value
+        likeNumber: likeNum.value,
       }
     })
   }
 
   //页面加载时...
   onLoad(() => {
-    getToken()
+
   })
   const getToken = () => {
-    const token = uni.getStorageSync('token')
-    if (!token) {
-      uni.login().then(({
-        code
-      }) => {
-        uniCloud.callFunction({
-          name: 'happy',
-          data: {
-            api: 'loginWithMp',
-            code
-          }
-        }).then(({
-          result
+    token.value = uni.getStorageSync('token')
+    if (!token.value) {
+      getUserInfo() //获取用户头像
+      console.log('avatar', avatarUrl.value)
+      if (avatarUrl.value && nickName.value) {
+        uni.login().then(({
+          code
         }) => {
-          token = result.token
-          uni.setStorageSync('token', token)
-          getMessages()
+          uniCloud.callFunction({
+            name: 'happy',
+            data: {
+              api: 'loginWithMp',
+              nickName: nickName.value,
+              avatarUrl: avatarUrl.value,
+              code
+            }
+          }).then(({
+            result
+          }) => {
+            token = result.token
+            uni.setStorageSync('token', token)
+            getMessages()
+          })
         })
-      })
+      }
     } else {
       getMessages()
     }

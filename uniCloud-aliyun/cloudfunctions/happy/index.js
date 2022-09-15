@@ -19,7 +19,9 @@ exports.main = async (event, context) => {
     }
     const user = await db.collection('user').doc(userId).get()
     const token = 'Bearer ' + jwt.sign({
-      userId
+      userId,
+      nickName: event.nickName,
+      avatarUrl: event.avatarUrl,
     }, jwtSecret)
     if (user.data[0]) {
       return {
@@ -29,7 +31,9 @@ exports.main = async (event, context) => {
     } else {
       const data = {
         _id: userId,
-        createdAt: Date.now()
+        createdAt: Date.now(),
+        nickName: event.nickName,
+        avatarUrl: event.avatarUrl,
       }
       await db.collection('user').add(data)
     }
@@ -38,14 +42,20 @@ exports.main = async (event, context) => {
       token
     }
   }
+  if (!event.token) {
+    throw new Error('用户未登录')
+  } else {
+    const auth = jwt.verify(event.token.replace('Bearer ', ''), jwtSecret)
+  }
 
   if (event.api == 'message') {
     return await db.collection('message').add({
       message: event.message,
       likeNumber: event.likeNum,
       createTime: event.createTime,
-      nickName: event.nickName,
-      avatarUrl: event.avatarUrl,
+      nickName: auth.nickName,
+      avatarUrl: auth.avatarUrl,
+      userId: auth.userId,
     })
   }
   if (event.api == 'getMessage') {
