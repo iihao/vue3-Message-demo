@@ -1,16 +1,58 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "uni-app"
-			}
-		}
-	],
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
-	}
+  "pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "半岛铁盒"
+      }
+    }, {
+      "path": "pages/home/home",
+      "style": {
+        "navigationBarTitleText": "我的",
+        "enablePullDownRefresh": false
+      }
+
+    }, {
+      "path": "pages/tiehe/tiehe",
+      "style": {
+        "navigationBarTitleText": "砖家说",
+        "enablePullDownRefresh": false
+      }
+
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "半岛铁盒",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#b4b4b4",
+    "selectedColor": "#FFD301",
+    "borderStyle": "white",
+    "backgroundColor": "#ffffff",
+    "spacing": "3px",
+    "list": [{
+        "text": "首页",
+
+        "pagePath": "pages/index/index"
+      },
+      {
+        "text": "专家说",
+
+        "pagePath": "pages/tiehe/tiehe"
+      },
+      {
+        "text": "我的",
+        "pagePath": "pages/home/home"
+      }
+    ]
+  },
+  "topWindow": {
+    "path": "responsive/top-window.vue",
+    "style": {
+      "height": "44px"
+    }
+  }
 }

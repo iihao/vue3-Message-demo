@@ -5,7 +5,12 @@
     "include": []
   },
   "setting": {
-    "urlCheck": false,
+    "urlCheck": true,
+    "es6": true,
+    "postcss": false,
+    "minified": true,
+    "newFeature": true,
+    "bigPackageSizeSupport": true,
     "babelSetting": {
       "ignore": [],
       "disablePlugins": [],
@@ -15,7 +20,7 @@
   "compileType": "miniprogram",
   "libVersion": "2.26.0",
   "appid": "wxe4934a642e916d27",
-  "projectname": "iihao",
+  "projectname": "半岛铁盒",
   "condition": {
     "search": {
       "current": -1,

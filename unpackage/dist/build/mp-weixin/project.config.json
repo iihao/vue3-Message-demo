@@ -4,12 +4,17 @@
     "ignore": []
   },
   "setting": {
-    "urlCheck": false
+    "urlCheck": true,
+    "es6": true,
+    "postcss": false,
+    "minified": true,
+    "newFeature": true,
+    "bigPackageSizeSupport": true
   },
   "compileType": "miniprogram",
   "libVersion": "",
-  "appid": "wxcec6e72166c4e34f",
-  "projectname": "iihao",
+  "appid": "wxe4934a642e916d27",
+  "projectname": "半岛铁盒",
   "condition": {
     "search": {
       "current": -1,

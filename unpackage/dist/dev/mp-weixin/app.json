@@ -1,12 +1,35 @@
 {
   "pages": [
-    "pages/index/index"
+    "pages/index/index",
+    "pages/home/home",
+    "pages/tiehe/tiehe"
   ],
   "window": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uni-app",
+    "navigationBarTitleText": "半岛铁盒",
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
   },
+  "tabBar": {
+    "color": "#b4b4b4",
+    "selectedColor": "#FFD301",
+    "borderStyle": "white",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "text": "首页",
+        "pagePath": "pages/index/index"
+      },
+      {
+        "text": "专家说",
+        "pagePath": "pages/tiehe/tiehe"
+      },
+      {
+        "text": "我的",
+        "pagePath": "pages/home/home"
+      }
+    ]
+  },
+  "permission": {},
   "usingComponents": {}
 }

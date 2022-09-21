@@ -1,1 +1,3 @@
-db.collection('message').remove();
+db.collection('message').orderBy('createTime', 'desc').get()
+
+db.collection('message').where('userId == "on2835G6JLm8WJ3YbkugMEukbayk"').remove()
