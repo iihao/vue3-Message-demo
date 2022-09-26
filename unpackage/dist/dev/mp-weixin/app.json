@@ -7,25 +7,31 @@
   "window": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "半岛铁盒",
-    "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8"
+    "navigationBarBackgroundColor": "#f8f1f1",
+    "backgroundColor": "#f8f1f1"
   },
   "tabBar": {
     "color": "#b4b4b4",
     "selectedColor": "#FFD301",
     "borderStyle": "white",
-    "backgroundColor": "#ffffff",
+    "backgroundColor": "#f8f1f1",
     "list": [
       {
-        "text": "首页",
+        "text": "铁盒",
+        "iconPath": "/static/sender-bg.png",
+        "selectedIconPath": "/static/sender-bgactive.png",
         "pagePath": "pages/index/index"
       },
       {
-        "text": "专家说",
+        "text": "砖家说",
+        "iconPath": "/static/home.png",
+        "selectedIconPath": "/static/home-active.png",
         "pagePath": "pages/tiehe/tiehe"
       },
       {
-        "text": "我的",
+        "text": "半岛",
+        "iconPath": "/static/user.png",
+        "selectedIconPath": "/static/user-active.png",
         "pagePath": "pages/home/home"
       }
     ]

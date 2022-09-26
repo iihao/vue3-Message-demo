@@ -9,7 +9,7 @@
             </view>
             <view class="message-box-wrapper">
               <text style="vertical-align: inherit; color:coral;">{{item.nickName}}</text>
-              <view class="message-box">{{item.message}}</view>
+              <view class="message-box-a">{{item.message}}</view>
               <text style="vertical-align: inherit;">{{item.createTime}}
               </text>
               <view class="like-number" @click="clickLikes(item._id,item.likeNumber,index)">
@@ -51,9 +51,13 @@
   const createTime = ref(dayjs().format('YYYY-MM-DD HH:mm:ss'))
   const likeNum = ref(0)
   const token = ref()
-  const nickName = ref()
-  const avatarUrl = ref()
-  const signature = ref()
+
+  const userProfileList = ref([])
+
+  // const nickName = ref()
+  // const avatarUrl = ref()
+  // const signature = ref()
+
   const wxCode = ref()
   const messageId = ref()
   const scrollTop = ref()
@@ -81,8 +85,8 @@
           message: inputText.value,
           likeNum: likeNum.value,
           createTime: createTime.value,
-          nickName: nickName.value,
-          avatarUrl: avatarUrl.value,
+          nickName: userProfileList.value.nickName,
+          avatarUrl: userProfileList.value.avatarUrl,
           status: status.value,
           token: uni.getStorageSync('token')
         }
@@ -104,7 +108,7 @@
     }
   }
 
-  //获取所有用户留言列表
+  //获取用户留言列表
   const getMessages = (apiVal) => {
     uniCloud.callFunction({
       name: 'happy',
@@ -118,7 +122,7 @@
     }).catch(err => {
       console.log(err)
       uni.showToast({
-        title: '查看留言失败',
+        title: '获取留言失败',
         icon: 'error'
       })
     })
@@ -129,9 +133,10 @@
     await uni.getUserProfile({
       desc: '用于完善用户信息', // 这个参数是必须的
       success: res => {
-        avatarUrl.value = res.userInfo.avatarUrl
-        nickName.value = res.userInfo.nickName
-        signature.value = res.userInfo.signature
+        userProfileList.value = res.userInfo
+        // avatarUrl.value = res.userInfo.avatarUrl
+        // nickName.value = res.userInfo.nickName
+        // signature.value = res.userInfo.signature
       },
       fail: err => {
         console.log(err)
@@ -189,50 +194,49 @@
     })
   }
 
-
-  const getToken = () => {
+  //将用户信息传入后端获取token
+  const getToken = async () => {
+    await getLogin()
     let token = uni.getStorageSync('token')
     if (!token) {
-      if (!avatarUrl.value || !nickName.value) {
+      // if (!avatarUrl.value || !nickName.value) {
+      //   uni.showToast({
+      //     title: '未登录不能留言',
+      //     icon: 'error'
+      //   })
+      //getUserInfo() 获取用户头像
+      // throw new Error('未登录不能留言')
+      uniCloud.callFunction({
+        name: 'happy',
+        data: {
+          api: 'loginWithMp',
+          nickName: userProfileList.value.nickName || '匿名用户',
+          avatarUrl: userProfileList.value.avatarUrl ||
+            'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-f7df76d0-0735-45ba-bd49-e366b3796e28/e89dbb99-fcd8-4182-ad73-82395d85bb9f.png',
+          signature: userProfileList.value.signature || '0',
+          code: wxCode.value,
+        }
+      }).then(({
+        result
+      }) => {
+        token = result.token
+        //console.log(result)
+        uni.setStorageSync('token', token)
+        getMessages()
+      }).catch(err => {
         uni.showToast({
-          title: '未登录不能留言',
+          title: '登录失败',
           icon: 'error'
         })
-        getUserInfo() //获取用户头像
-        throw new Error('未登录不能留言')
-      } else {
-        uniCloud.callFunction({
-          name: 'happy',
-          data: {
-            api: 'loginWithMp',
-            nickName: nickName.value,
-            avatarUrl: avatarUrl.value,
-            signature: signature.value,
-            code: wxCode.value,
-          }
-        }).then(({
-          result
-        }) => {
-          token = result.token
-          //console.log(result)
-          uni.setStorageSync('token', token)
-          getMessages()
-        }).catch(err => {
-          uni.showToast({
-            title: '登录失败',
-            icon: 'error'
-          })
-        })
-      }
+      })
     } else {
-
+      getMessages()
     }
   }
 
   //页面加载时...
   onLoad(() => {
-    getMessages()
-    getLogin()
+    getToken()
   })
 </script>
 
