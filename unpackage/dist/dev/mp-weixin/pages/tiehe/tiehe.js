@@ -1,0 +1,1 @@
+"use strict";var e=require("../../common/vendor.js");const r={data(){return{}}};function n(a,o,s,c,i,_){return{}}var t=e._export_sfc(r,[["render",n],["__file","/Users/huangqiang/Documents/HBuilderProjects/iihao/pages/tiehe/tiehe.vue"]]);wx.createPage(t);
