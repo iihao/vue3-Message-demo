@@ -400,6 +400,9 @@ page {
   border-radius: 6px;
   padding: 5px;
   background-color: var(--box-color);
+  position: absolute;
+  bottom: 1px;
+  width: 93%;
 }
 
 .input-wrapper {
@@ -524,14 +527,17 @@ page {
   width: 94%;
 }
 
-
-
 .message-box-wrapper text {
   font-size: 10px;
   line-height: 16px;
   color: var(--text-light);
   opacity: 0.6;
 }
+.message-box-wrapper .status{
+    color: red;
+    float: right;
+    margin-top:8px ;
+  }
 
 .app-right {
   flex-basis: 320px;

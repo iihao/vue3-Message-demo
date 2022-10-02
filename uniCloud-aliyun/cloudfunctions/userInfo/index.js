@@ -27,6 +27,12 @@ exports.main = async (event, context) => {
     }
     throw new Error("未登录")
   }
+  if (event.api == 'updateUserInfo') {
+    return await db.collection('user').doc(userId).update({
+      nickName: event.nickName,
+      avatarUrl: event.avatarUrl
+    })
+  }
   //event为客户端上传的参数
   console.log('event : ', event)
 

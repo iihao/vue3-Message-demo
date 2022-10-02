@@ -5,15 +5,17 @@
         <scroll-view scroll-y='true' scroll-with-animation='true' :scroll-into-view="scrollTop">
           <view class="message-wrapper" v-for="(item,index) in messageList" :key="item._id" :id="'id-'+index">
             <view class="avatar-box-wrapper">
-              <image :src="item.avatarUrl" class="message-pp"></image>
+              <image :src="item.userId[0].avatarUrl" class="message-pp"></image>
             </view>
             <view class="message-box-wrapper">
-              <text style="vertical-align: inherit; color:coral;">{{item.nickName}}</text>
+              <text style="vertical-align: inherit; color:coral;">{{item.userId[0].nickName}}</text>
+              <text class="status" v-if="item.status == 0">未审核</text>
               <view class="message-box-a">{{item.message}}</view>
               <text style="vertical-align: inherit;">{{item.createTime}}
               </text>
+              <!-- 点赞-->
               <view class="like-number" @click="clickLikes(item._id,item.likeNumber,index)">
-                <uni-icons type="hand-up-filled" size="14"></uni-icons>{{item.likeNumber}}
+                <uni-icons type="hand-up-filled" size="14" :color="likeColor"></uni-icons>{{item.likeNumber}}
               </view>
             </view>
           </view>
@@ -41,7 +43,8 @@
     watch
   } from 'vue'
   import {
-    onLoad
+    onLoad,
+    onReady
   } from '@dcloudio/uni-app'
   import dayjs from 'dayjs'
 
@@ -52,7 +55,11 @@
   const likeNum = ref(0)
   const token = ref()
 
+  const likeColor = ref()
+
   const userProfileList = ref([])
+
+  const db = uniCloud.database()
 
   // const nickName = ref()
   // const avatarUrl = ref()
@@ -62,6 +69,8 @@
   const messageId = ref()
   const scrollTop = ref()
   const status = ref(0)
+
+  const agreementMsg = ref({})
 
   const getCreateTime = async () => {
     createTime.value = dayjs().format('YYYY-MM-DD HH:mm:ss')
@@ -92,12 +101,16 @@
         }
       }).then(res => {
         getMessages()
-        scrollButton()
         inputText.value = ''
         uni.showToast({
           title: '留言成功',
           icon: 'success'
         })
+        uni.pageScrollTo({
+          scrollTop: 0,
+          selector: '.app-main',
+          duration: 400
+        });
       }).catch(err => {
         console.log(err)
         uni.showToast({
@@ -117,7 +130,8 @@
         token: uni.getStorageSync('token')
       }
     }).then(val => {
-      //console.log(val.result.data)
+      uni.hideLoading()
+      console.log(val)
       messageList.value = val.result.data
     }).catch(err => {
       console.log(err)
@@ -134,22 +148,6 @@
       desc: '用于完善用户信息', // 这个参数是必须的
       success: res => {
         userProfileList.value = res.userInfo
-        // avatarUrl.value = res.userInfo.avatarUrl
-        // nickName.value = res.userInfo.nickName
-        // signature.value = res.userInfo.signature
-      },
-      fail: err => {
-        console.log(err)
-      }
-    })
-  }
-  //获取用户登录code
-  const getLogin = async () => {
-    await uni.login({
-      timeout: 10000,
-      success: res => {
-        wxCode.value = res.code
-        console.log(res.code)
       },
       fail: err => {
         console.log(err)
@@ -158,12 +156,6 @@
   }
 
 
-  //滚动页面到最底部
-  const scrollButton = async () => {
-    const len = messageList.value.length
-    scrollTop.value = 'id-' + (len - 1)
-    //console.log(scrollTop.value, '滚动')
-  }
 
   //点赞clickLikes
   const clickLikes = async (MsgID, likeNum, index) => {
@@ -182,11 +174,13 @@
         title: '点赞成功',
         icon: 'success'
       })
+      likeColor.value = 'red'
       const curMsgVal = messageList.value.filter(val => val._id == MsgID)
       curMsgVal[0].likeNumber++
       //console.log(curMsgVal)
-      //console.log(res)
+      console.log(res)
     }).catch(err => {
+      console.log(err)
       uni.showToast({
         title: '你已经点过赞啦',
         icon: 'error'
@@ -194,18 +188,24 @@
     })
   }
 
+  //获取用户登录code
+  const getLogin = async () => {
+    await uni.login({
+      timeout: 10000,
+      success: res => {
+        wxCode.value = res.code
+        console.log(res.code)
+      },
+      fail: err => {
+        console.log(err)
+      }
+    })
+  }
   //将用户信息传入后端获取token
   const getToken = async () => {
     await getLogin()
     let token = uni.getStorageSync('token')
     if (!token) {
-      // if (!avatarUrl.value || !nickName.value) {
-      //   uni.showToast({
-      //     title: '未登录不能留言',
-      //     icon: 'error'
-      //   })
-      //getUserInfo() 获取用户头像
-      // throw new Error('未登录不能留言')
       uniCloud.callFunction({
         name: 'happy',
         data: {
@@ -213,17 +213,18 @@
           nickName: userProfileList.value.nickName || '匿名用户',
           avatarUrl: userProfileList.value.avatarUrl ||
             'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-f7df76d0-0735-45ba-bd49-e366b3796e28/e89dbb99-fcd8-4182-ad73-82395d85bb9f.png',
-          signature: userProfileList.value.signature || '0',
           code: wxCode.value,
         }
       }).then(({
         result
       }) => {
         token = result.token
-        //console.log(result)
+        console.log(result)
         uni.setStorageSync('token', token)
         getMessages()
       }).catch(err => {
+        uni.hideLoading()
+        console.log(err)
         uni.showToast({
           title: '登录失败',
           icon: 'error'
@@ -233,10 +234,49 @@
       getMessages()
     }
   }
+  //未登录弹窗
+  const showModal = () => {
+    if (uni.getStorageSync('token')) {
+      uni.showLoading({
+        title: '加载中'
+      })
+      getMessages()
+    } else {
+      uni.showModal({
+        title: agreementMsg.value.title || '用户协议',
+        content: agreementMsg.value.content || 'content',
+        confirmText: '同意',
+        cancelText: '退出',
+        success: function(res) {
+          if (res.confirm) {
+            uni.showLoading({
+              title: '加载中'
+            })
+            getToken()
+          } else if (res.cancel) {
+            console.log('用户点击取消');
+          }
+        }
+      })
+    }
+  }
 
   //页面加载时...
   onLoad(() => {
-    getToken()
+    //数据库查询协议内容
+    db.collection('show-agreement').limit(1).get()
+      .then(res => {
+        agreementMsg.value = res.result.data[0]
+        showModal()
+      })
+
+
+    getLogin()
+    console.log('onLoad')
+  })
+  onReady(() => {
+
+    console.log('onReady')
   })
 </script>
 

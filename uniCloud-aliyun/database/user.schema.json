@@ -1,0 +1,67 @@
+{
+	"bsonType": "object",
+	"required": [],
+	"permission": {
+		"read": false,
+		"create": false,
+		"update": false,
+		"delete": false
+	},
+	"properties": {
+		"_id": {
+			"description": "小程序的openID"
+		},
+		"nickName": {
+			"bsonType": "string",
+			"title": "用户昵称",
+			"description": "用户昵称",
+			"trim": "both"
+		},
+		"avatarUrl": {
+			"bsonType": "string",
+			"title": "头像地址",
+			"description": "用户头像地址",
+			"trim": "both"
+		},
+		"avatar_file": {
+			"bsonType": "file",
+			"title": "头像文件",
+			"description": "用file类型方便使用uni-file-picker组件"
+		},
+		"role": {
+			"bsonType": "array",
+			"title": "角色",
+			"description": "用户角色",
+			"enum": {
+				"collection": "uni-id-roles",
+				"field": "role_id as value, role_name as text"
+			},
+			"foreignKey": "uni-id-roles.role_id",
+			"permission": {
+				"write": false
+			}
+		},
+		"score": {
+			"bsonType": "int",
+			"description": "用户积分，积分变更记录可参考：user-coin 表定义"
+		},
+		"register_date": {
+			"bsonType": "timestamp",
+			"description": "注册时间",
+			"forceDefaultValue": {
+				"$env": "now"
+			}
+		},
+		"register_ip": {
+			"bsonType": "string",
+			"description": "注册时 IP 地址",
+			"forceDefaultValue": {
+				"$env": "clientIP"
+			}
+		},
+		"last_login_date": {
+			"bsonType": "timestamp",
+			"description": "最后登录时间"
+		}
+	}
+}
