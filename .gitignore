@@ -1,4 +1,4 @@
 #忽略云函数
 /uniCloud-aliyun/cloudfunctions
 cloudfunctions/
-/uniCloud-aliyun/cloudfunctions/userInfo
+/uniCloud-aliyun/cloudfunctions/userInfo/index.js
