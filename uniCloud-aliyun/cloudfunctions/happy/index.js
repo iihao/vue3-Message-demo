@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const db = uniCloud.database()
 const dbCmd = db.command
+//小程序配置
 const appId = 'wxe4934a642e916d27'
 const appSecret = '29e52d7983d0ccfe0bce367ebf772df4'
 const jwtSecret = '4934a642e916d27'
