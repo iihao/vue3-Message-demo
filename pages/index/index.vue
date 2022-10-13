@@ -15,7 +15,11 @@
               </text>
               <!-- 点赞-->
               <view class="like-number" @click="clickLikes(item._id,item.likeNumber,index)">
-                <uni-icons type="hand-up-filled" size="14" :color="likeColor"></uni-icons>{{item.likeNumber}}
+
+                <uni-icons type="hand-up-filled" size="14" :color="isLike(item._id,getUserId)?'red':''">
+
+                </uni-icons>
+                {{item.likeNumber}}
               </view>
             </view>
           </view>
@@ -54,6 +58,7 @@
   const createTime = ref(dayjs().format('YYYY-MM-DD HH:mm:ss'))
   const likeNum = ref(0)
   const token = ref()
+  const getUserId = ref(uni.getStorageSync('_id'))
 
   const likeColor = ref()
 
@@ -133,6 +138,7 @@
       uni.hideLoading()
       console.log(val)
       messageList.value = val.result.data
+
     }).catch(err => {
       console.log(err)
       uni.showToast({
@@ -141,6 +147,8 @@
       })
     })
   }
+
+
 
   //获取用户头像及昵称权限
   const getUserInfo = async () => {
@@ -154,7 +162,6 @@
       }
     })
   }
-
 
 
   //点赞clickLikes
@@ -221,6 +228,7 @@
         token = result.token
         console.log(result)
         uni.setStorageSync('token', token)
+        uni.setStorageSync('_id', result.user._id)
         getMessages()
       }).catch(err => {
         uni.hideLoading()
@@ -259,6 +267,36 @@
         }
       })
     }
+  }
+  //获取用户是否点赞（前端查询数据库方式，效率太低）
+  // const isLike = async (msgId, userId) => {
+  //   const dbisLike = await db.collection('message')
+  //     .where(`_id == '${msgId}' && likeUser == '${userId}'`).get().then(res => {
+  //       return res
+  //     }).catch(err => {
+  //       uni.showToast({
+  //         title: '获取点赞失败',
+  //         icon: 'error'
+  //       })
+  //     })
+  //   if (dbisLike.result.data) {
+  //     return true
+  //   }
+  // }
+
+  //通过留言查询，判断是否点赞
+  const isLike = (msgId, userId) => {
+    const message = JSON.parse(JSON.stringify(messageList.value))
+    const msgList = message.filter((val) => val._id == msgId)
+    if (msgList[0].likeUser) {
+      const likeList = msgList[0].likeUser.indexOf(userId)
+      if (likeList > -1) {
+        return true
+      }
+    }
+    false
+    console.log('留言列表', msgList)
+
   }
 
   //页面加载时...

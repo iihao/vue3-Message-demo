@@ -104,21 +104,7 @@
     })
   }
 
-  watch(userProfileList.value, () => {
-    uniCloud.callFunction({
-      name: 'userInfo',
-      data: {
-        api: 'updateUserInfo',
-        nickName: userProfileList.value.nickName,
-        avatarUrl: userProfileList.value.avatarUrl,
-        token: token.value
-      }
-    }).then(res => {
-      console.log(res)
-    })
-  }, {
-    deep: true
-  })
+
 
   const getUserInfo = () => {
     uniCloud.callFunction({
@@ -132,8 +118,10 @@
       getMessageCount(userInfo.value._id)
       getUserLikeCount(userInfo.value._id)
       getAgeDateDiff(userInfo.value._id)
+      uni.hideLoading()
       console.log(res.result)
     }).catch(err => {
+      uni.hideLoading()
       uni.showToast({
         title: '获取用户信息失败',
         icon: 'error'
@@ -180,7 +168,28 @@
 
   //页面加载时...
   onLoad(() => {
+    uni.showLoading()
     getUserInfo()
+
+  })
+
+  watch(() => userProfileList.value, () => {
+    uniCloud.callFunction({
+      name: 'userInfo',
+      data: {
+        api: 'updateUserInfo',
+        nickName: userProfileList.value.nickName,
+        avatarUrl: userProfileList.value.avatarUrl,
+        token: token.value
+      }
+    }).then(res => {
+      uni.showLoading()
+      console.log('修改信息成功', res)
+      getUserInfo()
+
+    })
+  }, {
+    deep: true
   })
 </script>
 

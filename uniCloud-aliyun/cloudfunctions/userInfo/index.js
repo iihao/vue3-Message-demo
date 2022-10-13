@@ -1,9 +1,10 @@
+const jwtSecret = '4934a642e916d27'
 const jwt = require('jsonwebtoken')
 const db = uniCloud.database({
   throwOnNotFound: false
 })
 const _ = db.command
-const jwtSecret = '4934a642e916d27'
+
 
 exports.main = async (event, context) => {
   if (!event.token) {
