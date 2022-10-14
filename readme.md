@@ -1,7 +1,7 @@
 # vue3-Message-demo
 微信小程序留言板Demo
 ## 小程序搜索：一本名叫半岛铁盒 可查看效果
-
+![img.png](img.png)
 
 ### clone
 `git clone https://github.com/iihao/vue3-Message-demo.git`
