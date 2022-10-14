@@ -1,1 +1,141 @@
-"use strict";var e=require("../../common/vendor.js");Array||e.resolveComponent("uni-icons")();const h=()=>"../../uni_modules/uni-icons/components/uni-icons/uni-icons.js";Math||h();const y={__name:"home",setup(g){const n=e.ref(e.index.getStorageSync("token")),r=e.ref([]),o=e.ref([]),u=e.ref(0),c=e.ref(0),l=e.ref(0),d=async()=>{await e.index.getUserProfile({desc:"\u7528\u4E8E\u5B8C\u5584\u7528\u6237\u4FE1\u606F",success:a=>{r.value=a.userInfo},fail:a=>{console.log(a)}})},v=()=>{e.pn.callFunction({name:"userInfo",data:{api:"getUserInfo",token:n.value}}).then(a=>{o.value=a.result,m(o.value._id),f(o.value._id),p(o.value._id),e.index.hideLoading(),console.log(a.result)}).catch(a=>{e.index.hideLoading(),e.index.showToast({title:"\u83B7\u53D6\u7528\u6237\u4FE1\u606F\u5931\u8D25",icon:"error"})})},i=e.pn.database(),m=a=>{i.collection("message").where(`userId == "${a}"`).groupBy("userId").groupField("sum(1) as messageCount").get().then(t=>{const s=t.result.data[0];u.value=s.messageCount,console.log(u.value)})},f=a=>{i.collection("message").where(`userId == "${a}"`).groupBy("userId").groupField("sum(likeNumber) as userLikeCount").get().then(t=>{const s=t.result.data[0];c.value=s.userLikeCount,console.log(c.value)})},p=a=>{i.collection("user").where(`_id == "${a}"`).get().then(t=>{const s=t.result.data[0],_=e.dayjs(s.createdAt).format("YYYY-MM-DD HH:mm:ss");l.value=e.dayjs().diff(e.dayjs(_),"day"),console.log(l.value)})};return e.onLoad(()=>{e.index.showLoading(),v()}),e.watch(()=>r.value,()=>{e.pn.callFunction({name:"userInfo",data:{api:"updateUserInfo",nickName:r.value.nickName,avatarUrl:r.value.avatarUrl,token:n.value}}).then(a=>{e.index.showLoading(),console.log("\u4FEE\u6539\u4FE1\u606F\u6210\u529F",a),v()})},{deep:!0}),(a,t)=>e.e({a:e.p({type:"gear",size:"20"}),b:e.o(s=>d()),c:n.value&&o.value.avatarUrl},n.value&&o.value.avatarUrl?{d:o.value.avatarUrl,e:e.o(s=>d())}:{},{f:n.value&&o.value.nickName},n.value&&o.value.nickName?{g:e.t(o.value.nickName)}:{},{h:e.p({color:"#004dfc",type:"calendar",size:"24"}),i:e.t(l.value),j:e.p({color:"#00ba9d",type:"medal",size:"24"}),k:e.p({color:"#715fc2",type:"chat",size:"24"}),l:e.t(u.value),m:e.p({color:"#ff562d",type:"star",size:"24"}),n:e.t(c.value)})}};var k=e._export_sfc(y,[["__file","/Users/huangqiang/Documents/HBuilderProjects/iihao/pages/home/home.vue"]]);wx.createPage(k);
+"use strict";
+var common_vendor = require("../../common/vendor.js");
+if (!Array) {
+  const _easycom_uni_icons2 = common_vendor.resolveComponent("uni-icons");
+  _easycom_uni_icons2();
+}
+const _easycom_uni_icons = () => "../../uni_modules/uni-icons/components/uni-icons/uni-icons.js";
+if (!Math) {
+  _easycom_uni_icons();
+}
+const _sfc_main = {
+  __name: "home",
+  setup(__props) {
+    const token = common_vendor.ref(common_vendor.index.getStorageSync("token"));
+    const userProfileList = common_vendor.ref([]);
+    const userInfo = common_vendor.ref([]);
+    const messageCount = common_vendor.ref(0);
+    const userLikeCount = common_vendor.ref(0);
+    const ageDateDiff = common_vendor.ref(0);
+    const setUserInfo = async () => {
+      await common_vendor.index.getUserProfile({
+        desc: "\u7528\u4E8E\u5B8C\u5584\u7528\u6237\u4FE1\u606F",
+        success: (res) => {
+          userProfileList.value = res.userInfo;
+        },
+        fail: (err) => {
+          console.log(err);
+        }
+      });
+    };
+    const getUserInfo = () => {
+      common_vendor.pn.callFunction({
+        name: "userInfo",
+        data: {
+          api: "getUserInfo",
+          token: token.value
+        }
+      }).then((res) => {
+        userInfo.value = res.result;
+        getMessageCount(userInfo.value._id);
+        getUserLikeCount(userInfo.value._id);
+        getAgeDateDiff(userInfo.value._id);
+        common_vendor.index.hideLoading();
+        console.log(res.result);
+      }).catch((err) => {
+        common_vendor.index.hideLoading();
+        common_vendor.index.showToast({
+          title: "\u83B7\u53D6\u7528\u6237\u4FE1\u606F\u5931\u8D25",
+          icon: "error"
+        });
+      });
+    };
+    const db = common_vendor.pn.database();
+    const getMessageCount = (val) => {
+      db.collection("message").where(`userId == "${val}"`).groupBy("userId").groupField("sum(1) as messageCount").get().then((res) => {
+        const msResult = res.result.data[0];
+        messageCount.value = msResult.messageCount;
+        console.log(messageCount.value);
+      });
+    };
+    const getUserLikeCount = (val) => {
+      db.collection("message").where(`userId == "${val}"`).groupBy("userId").groupField("sum(likeNumber) as userLikeCount").get().then((res) => {
+        const msResult = res.result.data[0];
+        userLikeCount.value = msResult.userLikeCount;
+        console.log(userLikeCount.value);
+      });
+    };
+    const getAgeDateDiff = (val) => {
+      db.collection("user").where(`_id == "${val}"`).get().then((res) => {
+        const msResult = res.result.data[0];
+        const creatAt = common_vendor.dayjs(msResult.createdAt).format("YYYY-MM-DD HH:mm:ss");
+        ageDateDiff.value = common_vendor.dayjs().diff(common_vendor.dayjs(creatAt), "day");
+        console.log(ageDateDiff.value);
+      });
+    };
+    common_vendor.onLoad(() => {
+      common_vendor.index.showLoading();
+      getUserInfo();
+    });
+    common_vendor.watch(() => userProfileList.value, () => {
+      common_vendor.pn.callFunction({
+        name: "userInfo",
+        data: {
+          api: "updateUserInfo",
+          nickName: userProfileList.value.nickName,
+          avatarUrl: userProfileList.value.avatarUrl,
+          token: token.value
+        }
+      }).then((res) => {
+        common_vendor.index.showLoading();
+        console.log("\u4FEE\u6539\u4FE1\u606F\u6210\u529F", res);
+        getUserInfo();
+      });
+    }, {
+      deep: true
+    });
+    return (_ctx, _cache) => {
+      return common_vendor.e({
+        a: common_vendor.p({
+          type: "gear",
+          size: "20"
+        }),
+        b: common_vendor.o(($event) => setUserInfo()),
+        c: token.value && userInfo.value.avatarUrl
+      }, token.value && userInfo.value.avatarUrl ? {
+        d: userInfo.value.avatarUrl,
+        e: common_vendor.o(($event) => setUserInfo())
+      } : {}, {
+        f: token.value && userInfo.value.nickName
+      }, token.value && userInfo.value.nickName ? {
+        g: common_vendor.t(userInfo.value.nickName)
+      } : {}, {
+        h: common_vendor.p({
+          color: "#004dfc",
+          type: "calendar",
+          size: "24"
+        }),
+        i: common_vendor.t(ageDateDiff.value),
+        j: common_vendor.p({
+          color: "#00ba9d",
+          type: "medal",
+          size: "24"
+        }),
+        k: common_vendor.p({
+          color: "#715fc2",
+          type: "chat",
+          size: "24"
+        }),
+        l: common_vendor.t(messageCount.value),
+        m: common_vendor.p({
+          color: "#ff562d",
+          type: "star",
+          size: "24"
+        }),
+        n: common_vendor.t(userLikeCount.value)
+      });
+    };
+  }
+};
+var MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__file", "/Users/huangqiang/Documents/HBuilderProjects/vue3-Message-demo/pages/home/home.vue"]]);
+wx.createPage(MiniProgramPage);

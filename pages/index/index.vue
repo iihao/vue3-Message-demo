@@ -3,7 +3,7 @@
     <view class="app-main">
       <view class="chat-wrapper">
         <scroll-view scroll-y='true' scroll-with-animation='true' :scroll-into-view="scrollTop">
-          <view class="message-wrapper" v-for="(item,index) in messageList" :key="item._id" :id="'id-'+index">
+          <view class="message-wrapper" v-for="(item,index) in messageList" :key="item._id" :id="item._id">
             <view class="avatar-box-wrapper">
               <image :src="item.userId[0].avatarUrl" class="message-pp"></image>
             </view>
@@ -15,11 +15,9 @@
               </text>
               <!-- 点赞-->
               <view class="like-number" @click="clickLikes(item._id,item.likeNumber,index)">
-
                 <uni-icons type="hand-up-filled" size="14" :color="isLike(item._id,getUserId)?'red':''">
-
                 </uni-icons>
-                {{item.likeNumber}}
+                <text :class="isLike(item._id,getUserId)?'red':''"> {{item.likeNumber}}</text>
               </view>
             </view>
           </view>
@@ -44,6 +42,7 @@
 <script setup>
   import {
     ref,
+    reactive,
     watch
   } from 'vue'
   import {
@@ -59,6 +58,8 @@
   const likeNum = ref(0)
   const token = ref()
   const getUserId = ref(uni.getStorageSync('_id'))
+
+
 
   const likeColor = ref()
 
@@ -76,6 +77,8 @@
   const status = ref(0)
 
   const agreementMsg = ref({})
+
+  const isLikeRef = ref(false)
 
   const getCreateTime = async () => {
     createTime.value = dayjs().format('YYYY-MM-DD HH:mm:ss')
@@ -181,7 +184,6 @@
         title: '点赞成功',
         icon: 'success'
       })
-      likeColor.value = 'red'
       const curMsgVal = messageList.value.filter(val => val._id == MsgID)
       curMsgVal[0].likeNumber++
       //console.log(curMsgVal)
@@ -295,8 +297,6 @@
       }
     }
     false
-    console.log('留言列表', msgList)
-
   }
 
   //页面加载时...
@@ -320,4 +320,8 @@
 
 <style lang="scss">
   @import url("@/src/style/style.scss");
+
+  .red {
+    color: red !important;
+  }
 </style>

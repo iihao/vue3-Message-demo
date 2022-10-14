@@ -3,7 +3,8 @@
   "projectname": "iihao",
   "setting": {
     "compileHotReLoad": true,
-    "urlCheck": false
+    "urlCheck": false,
+    "autoAudits": false
   },
   "condition": {
     "miniprogram": {
@@ -17,5 +18,6 @@
         }
       ]
     }
-  }
+  },
+  "libVersion": "2.27.0"
 }

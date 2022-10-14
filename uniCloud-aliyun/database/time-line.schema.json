@@ -1,0 +1,31 @@
+{
+  "bsonType": "object",
+  "required": [],
+  "permission": {
+    "read": true,
+    "create": false,
+    "update": false,
+    "delete": false
+  },
+  "properties": {
+    "_id": {
+      "description": "ID，系统自动生成"
+    },
+    "title": {
+      "bsonType": "string",
+      "description": "标题"
+    },
+    "desc": {
+      "bsonType": "string",
+      "description": "描述"
+    },
+    "timestamp": {
+      "bsonType": "timestamp",
+      "description": "时间"
+    },
+    "diydesc": {
+      "bsonType": "string",
+      "description": "自定义内容"
+    }
+  }
+}

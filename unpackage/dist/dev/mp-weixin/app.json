@@ -2,7 +2,11 @@
   "pages": [
     "pages/index/index",
     "pages/home/home",
-    "pages/tiehe/tiehe"
+    "pages/tiehe/tiehe",
+    "pages/tiehe/time-line/add",
+    "pages/tiehe/time-line/edit",
+    "pages/tiehe/time-line/list",
+    "pages/tiehe/time-line/detail"
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -23,7 +27,7 @@
         "pagePath": "pages/index/index"
       },
       {
-        "text": "砖家说",
+        "text": "时间线",
         "iconPath": "/static/ui-01/community.png",
         "selectedIconPath": "/static/ui-01/community_s.png",
         "pagePath": "pages/tiehe/tiehe"

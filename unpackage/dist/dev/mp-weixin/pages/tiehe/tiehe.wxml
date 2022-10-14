@@ -1,0 +1,1 @@
+<view class="main"><view class="timeline"><timeline wx:for="{{a}}" wx:for-item="item" wx:key="c" u-s="{{['icon']}}" bindeditClick="{{item.d}}" u-i="{{item.e}}" bind:__l="__l" u-p="{{item.f}}"><uni-icons u-i="{{item.a}}" bind:__l="__l" u-p="{{item.b}}" slot="icon"></uni-icons></timeline></view><button type="primary" class="timeline-send-btn" bindtap="{{b}}"> 新增时间线 </button></view>

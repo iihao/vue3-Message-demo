@@ -15,10 +15,29 @@
     }, {
       "path": "pages/tiehe/tiehe",
       "style": {
-        "navigationBarTitleText": "砖家说",
+        "navigationBarTitleText": "时间线",
         "enablePullDownRefresh": false
       }
-
+    }, {
+      "path": "pages/tiehe/time-line/add",
+      "style": {
+        "navigationBarTitleText": "新增时间线"
+      }
+    }, {
+      "path": "pages/tiehe/time-line/edit",
+      "style": {
+        "navigationBarTitleText": "编辑"
+      }
+    }, {
+      "path": "pages/tiehe/time-line/list",
+      "style": {
+        "navigationBarTitleText": "列表"
+      }
+    }, {
+      "path": "pages/tiehe/time-line/detail",
+      "style": {
+        "navigationBarTitleText": "详情"
+      }
     }
   ],
   "globalStyle": {
@@ -40,7 +59,7 @@
         "pagePath": "pages/index/index"
       },
       {
-        "text": "砖家说",
+        "text": "时间线",
         "iconPath": "/static/ui-01/community.png",
         "selectedIconPath": "/static/ui-01/community_s.png",
         "pagePath": "pages/tiehe/tiehe"
