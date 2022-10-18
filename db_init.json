@@ -1,0 +1,433 @@
+{
+    "articles": {
+        "data": [],
+        "schema": {
+            "bsonType": "object",
+            "required": [
+                "user_id",
+                "title",
+                "content"
+            ],
+            "permission": {
+                "read": "doc.user_id == auth.uid && doc.article_status == 0 || doc.article_status == 1",
+                "create": "auth.uid != null",
+                "update": "doc.user_id == auth.uid",
+                "delete": "doc.user_id == auth.uid"
+            },
+            "properties": {
+                "_id": {
+                    "description": "存储文档 ID（用户 ID），系统自动生成"
+                },
+                "user_id": {
+                    "bsonType": "string",
+                    "description": "文章作者ID， 参考`uni-id-users` 表",
+                    "foreignKey": "uni-id-users._id",
+                    "defaultValue": {
+                        "$env": "uid"
+                    }
+                },
+                "category_id": {
+                    "bsonType": "string",
+                    "title": "分类",
+                    "description": "分类 id，参考`uni-news-categories`表",
+                    "foreignKey": "opendb-news-categories._id",
+                    "enum": {
+                        "collection": "opendb-news-categories",
+                        "field": "name as text, _id as value"
+                    }
+                },
+                "title": {
+                    "bsonType": "string",
+                    "title": "标题",
+                    "description": "标题",
+                    "label": "标题",
+                    "trim": "both"
+                },
+                "content": {
+                    "bsonType": "string",
+                    "title": "文章内容",
+                    "description": "文章内容",
+                    "label": "文章内容",
+                    "trim": "right"
+                },
+                "excerpt": {
+                    "bsonType": "string",
+                    "title": "文章摘录",
+                    "description": "文章摘录",
+                    "label": "摘要",
+                    "trim": "both"
+                },
+                "article_status": {
+                    "bsonType": "int",
+                    "title": "文章状态",
+                    "description": "文章状态：0 草稿箱 1 已发布",
+                    "defaultValue": 0,
+                    "enum": [
+                        {
+                            "value": 0,
+                            "text": "草稿箱"
+                        },
+                        {
+                            "value": 1,
+                            "text": "已发布"
+                        }
+                    ]
+                },
+                "view_count": {
+                    "bsonType": "int",
+                    "title": "阅读数量",
+                    "description": "阅读数量",
+                    "permission": {
+                        "write": false
+                    }
+                },
+                "like_count": {
+                    "bsonType": "int",
+                    "description": "喜欢数、点赞数",
+                    "permission": {
+                        "write": false
+                    }
+                },
+                "is_sticky": {
+                    "bsonType": "bool",
+                    "title": "是否置顶",
+                    "description": "是否置顶",
+                    "permission": {
+                        "write": false
+                    }
+                },
+                "is_essence": {
+                    "bsonType": "bool",
+                    "title": "阅读加精",
+                    "description": "阅读加精",
+                    "permission": {
+                        "write": false
+                    }
+                },
+                "comment_status": {
+                    "bsonType": "int",
+                    "title": "开放评论",
+                    "description": "评论状态：0 关闭  1 开放",
+                    "enum": [
+                        {
+                            "value": 0,
+                            "text": "关闭"
+                        },
+                        {
+                            "value": 1,
+                            "text": "开放"
+                        }
+                    ]
+                },
+                "comment_count": {
+                    "bsonType": "int",
+                    "description": "评论数量",
+                    "permission": {
+                        "write": false
+                    }
+                },
+                "last_comment_user_id": {
+                    "bsonType": "string",
+                    "description": "最后回复用户 id，参考`uni-id-users` 表",
+                    "foreignKey": "uni-id-users._id"
+                },
+                "avatar": {
+                    "bsonType": "string",
+                    "title": "封面大图",
+                    "description": "缩略图地址",
+                    "label": "封面大图",
+                    "trim": "both"
+                },
+                "publish_date": {
+                    "bsonType": "timestamp",
+                    "title": "发表时间",
+                    "description": "发表时间",
+                    "defaultValue": {
+                        "$env": "now"
+                    }
+                },
+                "publish_ip": {
+                    "bsonType": "string",
+                    "title": "发布文章时IP地址",
+                    "description": "发表时 IP 地址",
+                    "forceDefaultValue": {
+                        "$env": "clientIP"
+                    }
+                },
+                "last_modify_date": {
+                    "bsonType": "timestamp",
+                    "title": "最后修改时间",
+                    "description": "最后修改时间",
+                    "defaultValue": {
+                        "$env": "now"
+                    }
+                },
+                "last_modify_ip": {
+                    "bsonType": "string",
+                    "description": "最后修改时 IP 地址",
+                    "forceDefaultValue": {
+                        "$env": "clientIP"
+                    }
+                },
+                "mode": {
+                    "bsonType": "number",
+                    "title": "排版显示模式",
+                    "description": "排版显示模式,如左图右文、上图下文等"
+                }
+            },
+            "version": "0.0.1"
+        }
+    },
+    "message": {
+        "data": [
+            {
+                "_id": "63296ae71e2b9d0001fb9f53",
+                "message": "我",
+                "likeNumber": 3,
+                "createTime": "2022-09-20 15:25:15",
+                "status": 1,
+                "nickName": "Swag",
+                "avatarUrl": "https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLO77LIhtBfX3oB4VYPA4kmSFcpqBRmNaEXFu0ebpib6nu24o0PYpIic0vOt3jEwzHmjPxZNSz1dqOw/132",
+                "userId": "on2835NqHcq51IoBuyANqlt74nO8",
+                "likeUser": [
+                    "on2835NqHcq51IoBuyANqlt74nO8",
+                    "on2835G6JLm8WJ3YbkugMEukbayk",
+                    "on2835Lg_CgSOtSm5-BblkrZ6598",
+                    "on2835Lg_CgSOtSm5-BblkrZ6598"
+                ]
+            }
+        ],
+        "schema": {
+            "bsonType": "object",
+            "required": [],
+            "permission": {
+                "read": true,
+                "create": true,
+                "update": false,
+                "delete": false
+            },
+            "properties": {
+                "_id": {
+                    "description": "ID，系统自动生成"
+                },
+                "userId": {
+                    "bsonType": "string",
+                    "foreignKey": "user._id"
+                },
+                "message": {
+                    "bsonType": "string",
+                    "description": "留言内容"
+                },
+                "likeNumber": {
+                    "bsonType": "int",
+                    "description": "点赞数"
+                },
+                "createTime": {
+                    "bsonType": "string",
+                    "description": "创建时间"
+                },
+                "status": {
+                    "bsonType": "int",
+                    "description": "留言状态，0未审核 1已审核"
+                },
+                "likeUser": {
+                    "bsonType": "array",
+                    "description": "存储点赞的用户id"
+                }
+            }
+        }
+    },
+    "show-agreement": {
+        "data": [
+            {
+                "_id": "6336ba85f74ea000017fd477",
+                "version": "1.0",
+                "title": "用户协议",
+                "content": "欢迎来到半岛铁盒！在使用之前，请遵守以下几点要求：1.禁止发布暴力，色情，敏感言论；2.你的所有留言都需要通过管理员审核才会公开！3.部分功能可能需要获取你的头像信息"
+            }
+        ],
+        "schema": {
+            "bsonType": "object",
+            "required": [],
+            "permission": {
+                "read": true,
+                "create": false,
+                "update": false,
+                "delete": false
+            },
+            "properties": {
+                "_id": {
+                    "description": "ID，系统自动生成"
+                }
+            }
+        }
+    },
+    "time-line": {
+        "data": [
+            {
+                "_id": "6348d7430a5aba0001501d6a",
+                "title": "v1.0",
+                "desc": "完成留言板主体功能",
+                "timestamp": 1662652800000,
+                "diydesc": "add"
+            }
+        ],
+        "schema": {
+            "bsonType": "object",
+            "required": [],
+            "permission": {
+                "read": true,
+                "create": false,
+                "update": false,
+                "delete": false
+            },
+            "properties": {
+                "_id": {
+                    "description": "ID，系统自动生成"
+                },
+                "title": {
+                    "bsonType": "string",
+                    "description": "标题"
+                },
+                "desc": {
+                    "bsonType": "string",
+                    "description": "描述"
+                },
+                "timestamp": {
+                    "bsonType": "timestamp",
+                    "description": "时间"
+                },
+                "diydesc": {
+                    "bsonType": "string",
+                    "description": "自定义内容"
+                }
+            }
+        }
+    },
+    "user": {
+        "data": [
+            {
+                "_id": "on2835G6JLm8WJ3YbkugMEukbayk",
+                "createdAt": 1663313348314,
+                "nickName": "。",
+                "avatarUrl": "https://thirdwx.qlogo.cn/mmopen/vi_32/05Wiazxo0OS7w2qQIB5cUaFeHDK0252mYwENLjWAEljDUwNEdSCBFfpFUcuX0w2VbZqfephXjgCUh5Gk40DWY0g/132"
+            }
+        ],
+        "schema": {
+            "bsonType": "object",
+            "required": [],
+            "permission": {
+                "read": true,
+                "create": false,
+                "update": false,
+                "delete": false
+            },
+            "properties": {
+                "_id": {
+                    "description": "小程序的openID"
+                },
+                "nickName": {
+                    "bsonType": "string",
+                    "title": "用户昵称",
+                    "description": "用户昵称",
+                    "trim": "both"
+                },
+                "avatarUrl": {
+                    "bsonType": "string",
+                    "title": "头像地址",
+                    "description": "用户头像地址",
+                    "trim": "both"
+                },
+                "avatar_file": {
+                    "bsonType": "file",
+                    "title": "头像文件",
+                    "description": "用file类型方便使用uni-file-picker组件"
+                },
+                "role": {
+                    "bsonType": "array",
+                    "title": "角色",
+                    "description": "用户角色",
+                    "enum": {
+                        "collection": "uni-id-roles",
+                        "field": "role_id as value, role_name as text"
+                    },
+                    "foreignKey": "uni-id-roles.role_id",
+                    "permission": {
+                        "write": false
+                    }
+                },
+                "score": {
+                    "bsonType": "int",
+                    "description": "用户积分，积分变更记录可参考：user-coin 表定义"
+                },
+                "register_date": {
+                    "bsonType": "timestamp",
+                    "description": "注册时间",
+                    "forceDefaultValue": {
+                        "$env": "now"
+                    }
+                },
+                "register_ip": {
+                    "bsonType": "string",
+                    "description": "注册时 IP 地址",
+                    "forceDefaultValue": {
+                        "$env": "clientIP"
+                    }
+                },
+                "last_login_date": {
+                    "bsonType": "timestamp",
+                    "description": "最后登录时间"
+                }
+            }
+        }
+    },
+    "user-coin": {
+        "data": [],
+        "schema": {
+            "bsonType": "object",
+            "required": [
+                "user_id",
+                "score",
+                "balance"
+            ],
+            "properties": {
+                "_id": {
+                    "description": "ID，系统自动生成"
+                },
+                "user_id": {
+                    "bsonType": "string",
+                    "description": "用户id，参考uni-id-users表"
+                },
+                "score": {
+                    "bsonType": "int",
+                    "description": "本次变化的积分"
+                },
+                "type": {
+                    "bsonType": "int",
+                    "enum": [
+                        1,
+                        2
+                    ],
+                    "description": "积分类型 1:收入 2:支出"
+                },
+                "balance": {
+                    "bsonType": "int",
+                    "description": "变化后的积分余额"
+                },
+                "comment": {
+                    "bsonType": "string",
+                    "description": "备注，说明积分新增、消费的缘由",
+                    "trim": "both"
+                },
+                "create_date": {
+                    "bsonType": "timestamp",
+                    "description": "创建时间",
+                    "forceDefaultValue": {
+                        "$env": "now"
+                    }
+                }
+            },
+            "version": "0.0.1"
+        }
+    }
+}
